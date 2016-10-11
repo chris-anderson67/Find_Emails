@@ -9,6 +9,7 @@
 from bs4 import BeautifulSoup
 from urllib2 import urlopen
 import sys
+import re
 
 
 def main():
@@ -16,7 +17,8 @@ def main():
     html = urlopen(url).read()
     soup = BeautifulSoup(html, "html.parser")
 
-    for a in soup.find_all("a"):
+    # Regex from http://scraping.pro/email-validation-regexes/
+    for a in soup.find_all(text=re.compile("^[a-zA-Z0-9_.+-]+@[a-zA-Z0-9-]+\.[a-zA-Z0-9-.]+$")):
         print a.string
 
 if __name__ == '__main__':
