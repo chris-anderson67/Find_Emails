@@ -6,30 +6,46 @@
 #
 
 from bs4 import BeautifulSoup
-from urllib2 import urlopen
+import urllib2
 from urlparse import urljoin
+from sets import Set
 import sys
 import re
 
 # Regex from http://scraping.pro/email-validation-regexes/
 CONST_EMAIL_REGEX = "^[a-zA-Z0-9_.+-]+@[a-zA-Z0-9-]+\.[a-zA-Z0-9-.]+$"
 
-def make_soup(url):
-    html = urlopen(url).read()
-    return BeautifulSoup(html, "html.parser")
+urls = Set() # visited urls
+emails = Set() # collected emails
+
+def open_url(url):
+    try:
+       return urllib2.urlopen(url)
+    except urllib2.HTTPError, err:
+       if err.code == 404:
+            return False
+       elif err.code == 403:
+            return False
+       else:
+            return False
+    except urllib2.URLError, err:
+        return False
 
 # url: current page to parse
 # domain: domain to crawl
 # i: recursion depth
 def find_emails(url, domain, i):
-    if (i > 5):
+    if (i >= 2):
         return
-    soup = make_soup(url)
-    subpages = []
+
+    html = open_url(url)
+    if (html == False):
+        return
+    soup = BeautifulSoup(html, "html.parser")
 
     # print all plaintext emails on page
     for t in soup.find_all(text=re.compile(CONST_EMAIL_REGEX)):
-        print t.string
+        emails.add(t.string)
 
     for a in soup.find_all('a'):
         href = a.get('href')
@@ -47,6 +63,8 @@ def main():
     domain = str(sys.argv[1]); # Add checks for no cla
     url = "https://www." + domain # Assumes domain given
     find_emails(url, domain, 0);
+    for e in emails:
+        print e
 
 
 if __name__ == '__main__':
