@@ -11,15 +11,21 @@ from urllib2 import urlopen
 import sys
 import re
 
+def make_soup(url):
+    html = urlopen(url).read()
+    return BeautifulSoup(html, "html.parser")
+
+def find_emails(url):
+    soup = make_soup(url)
+    # Regex from http://scraping.pro/email-validation-regexes/
+    for t in soup.find_all(text=re.compile("^[a-zA-Z0-9_.+-]+@[a-zA-Z0-9-]+\.[a-zA-Z0-9-.]+$")):
+        print t.string
+
 
 def main():
-    url = str(sys.argv[1]); # Add checks for no cla
-    html = urlopen(url).read()
-    soup = BeautifulSoup(html, "html.parser")
+    base_url = str(sys.argv[1]); # Add checks for no cla
+    find_emails(base_url);
 
-    # Regex from http://scraping.pro/email-validation-regexes/
-    for a in soup.find_all(text=re.compile("^[a-zA-Z0-9_.+-]+@[a-zA-Z0-9-]+\.[a-zA-Z0-9-.]+$")):
-        print a.string
 
 if __name__ == '__main__':
     main()
