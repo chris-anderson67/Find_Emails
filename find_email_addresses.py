@@ -15,7 +15,7 @@ import re
 
 # Regex from http://scraping.pro/email-validation-regexes/
 CONST_EMAIL_REGEX = "^[a-zA-Z0-9_.+-]+@[a-zA-Z0-9-]+\.[a-zA-Z0-9-.]+$"
-DEBUG = True
+DEBUG = False
 
 urls = Set() # visited urls
 emails = Set() # collected emails
