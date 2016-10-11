@@ -26,12 +26,16 @@ def open_url(url):
        return urllib2.urlopen(url)
     except urllib2.HTTPError, err:
        if err.code == 404:
+            if (DEBUG): print "error 404"
             return False
        elif err.code == 403:
+            if (DEBUG): print "error 403"
             return False
        else:
+            if (DEBUG): print "other error"
             return False
     except urllib2.URLError, err:
+        if (DEBUG): print "other error"
         return False
 
 # url: current page to parse
@@ -76,7 +80,8 @@ def main():
         sys.exit(1)
 
     domain = str(sys.argv[1]);
-    url = "https://www." + domain # Assumes domain given (web.com)
+    url = "http://www." + domain # Assumes domain given (web.com)
+    print url
     find_emails(url, domain, DEBUG);
     for e in emails:
         print e

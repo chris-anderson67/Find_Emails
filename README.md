@@ -1,8 +1,8 @@
 # Find Email Addresses
 ### Chris Anderson
-Jana Coding Challenge 2016
+####Jana Coding Challenge 2016 
 
-### About:
+#### About:
     - Uses BeautifulSoup 4 because I've used it before
         - Thre might be other frameworks which would better implement crawling
         as well as scraping in an easier or more efficient way.
