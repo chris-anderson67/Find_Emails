@@ -20,6 +20,7 @@ DEBUG = True
 urls = Set() # visited urls
 emails = Set() # collected emails
 
+# Catch HTTP Error codes silently without crashing
 def open_url(url):
     try:
        return urllib2.urlopen(url)
@@ -39,11 +40,9 @@ def open_url(url):
 def find_emails(url, domain, debug):
     html = open_url(url)
 
-    #Base cases
     if (html == False): return
     if (url in urls): return
     if (debug): print url
-
     urls.add(url)
     soup = BeautifulSoup(html, "html.parser")
 
@@ -51,7 +50,7 @@ def find_emails(url, domain, debug):
     for t in soup.find_all(text=re.compile(CONST_EMAIL_REGEX)):
         emails.add(t.string)
 
-    #find all links, follow http, extract mailto
+    # find all links, follow http, extract mailto
     for a in soup.find_all('a'):
         href = a.get('href')
         if not href: continue
