@@ -15,6 +15,7 @@ import re
 
 # Regex from http://scraping.pro/email-validation-regexes/
 CONST_EMAIL_REGEX = "^[a-zA-Z0-9_.+-]+@[a-zA-Z0-9-]+\.[a-zA-Z0-9-.]+$"
+URL_MAX_LEN = 2000
 DEBUG = True
 
 urls = Set() # visited urls
@@ -37,7 +38,7 @@ def open_url(url):
 def find_emails(url, domain, debug):
     html = open_url(url)
 
-    if (not html) or (url in urls):
+    if (not html) or (url in urls) or (len(url) > URL_MAX_LEN):
         return
 
     if (debug): print url
