@@ -47,7 +47,9 @@ def find_emails(url, domain, debug):
 
     # print all plaintext emails on page
     for t in soup.find_all(text=re.compile(CONST_EMAIL_REGEX)):
-        emails.add(t.string)
+        email = t.string
+        if (email.endswith(r"/^[a-zA-Z\d]+$/")): #end with letter or number
+            emails.add(t.string)
 
     # find all links, follow http, extract mailto
     for a in soup.find_all('a'):
@@ -57,10 +59,11 @@ def find_emails(url, domain, debug):
             href = href[7:]
             emails.add(href)
             continue
+
         # Find links that dont leave domain, aren't visited
-        new_url = urljoin(url, href)
-        if ((domain not in urlparse(new_url).netloc) or 
-            ("http" not in new_url) or 
+        new_url = urljoin(url, href) # capture relative urls
+        new_net_loc = urlparse(new_url).netloc
+        if ((domain != new_net_loc and 'www.' + domain != new_net_loc) or
             (new_url in urls)): 
             continue
 
