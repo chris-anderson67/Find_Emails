@@ -44,8 +44,9 @@ def open_url(url):
 def find_emails(url, domain, debug):
     html = open_url(url)
 
-    if (html == False): return
-    if (url in urls): return
+    if (not html) or (url in urls):
+        return
+
     if (debug): print url
     urls.add(url)
     soup = BeautifulSoup(html, "html.parser")
@@ -62,13 +63,12 @@ def find_emails(url, domain, debug):
             href = href[7:]
             emails.add(href)
             continue
-
         # Find links that dont leave domain, aren't visited
-        if (domain not in href): continue
         new_url = urljoin(url, href)
-        if (domain not in urlparse(new_url).netloc): continue
-        if ("http" not in new_url): continue
-        if (new_url in urls): continue
+        if (domain not in urlparse(new_url).netloc) or 
+           ("http" not in new_url) or 
+           (new_url in urls): 
+            continue
 
         find_emails(new_url, domain, debug)
 
