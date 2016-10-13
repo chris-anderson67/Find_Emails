@@ -74,7 +74,7 @@ def main():
         sys.exit(1)
 
     domain = str(sys.argv[1]);
-    url = "http://www." + domain # Assumes domain given (web.com)
+    url = "http://" + domain # Assumes domain given (web.com)
     print url
     find_emails(url, domain, DEBUG);
     for e in emails:
