@@ -25,17 +25,10 @@ def open_url(url):
     try:
        return urllib2.urlopen(url)
     except urllib2.HTTPError, err:
-       if err.code == 404:
-            if (DEBUG): print "error 404"
-            return False
-       elif err.code == 403:
-            if (DEBUG): print "error 403"
-            return False
-       else:
-            if (DEBUG): print "other error"
-            return False
+        if (DEBUG): print "http error: " + str(err.code)
+        return False
     except urllib2.URLError, err:
-        if (DEBUG): print "other error"
+        if (DEBUG): print "url error: " + str(err.code)
         return False
 
 # url: current page to parse
@@ -65,9 +58,9 @@ def find_emails(url, domain, debug):
             continue
         # Find links that dont leave domain, aren't visited
         new_url = urljoin(url, href)
-        if (domain not in urlparse(new_url).netloc) or 
-           ("http" not in new_url) or 
-           (new_url in urls): 
+        if ((domain not in urlparse(new_url).netloc) or 
+            ("http" not in new_url) or 
+            (new_url in urls)): 
             continue
 
         find_emails(new_url, domain, debug)
